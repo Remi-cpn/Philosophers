@@ -1,0 +1,8 @@
+# Compiled files
+*.o
+*.a
+*.out
+*.exe
+
+# Libft build files
+libft/obj/
