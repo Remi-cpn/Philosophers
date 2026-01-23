@@ -6,11 +6,30 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:36:47 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/22 10:56:41 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/23 14:35:02 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+
+static void	free_philos(t_philo *philos, t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < data->nbr_ph)
+	{
+		pthread_mutex_destroy(&philos[i].meal_mutex);
+		i++;
+	}
+	free(philos);
+}
+
+static void	free_data(t_data *data)
+{
+	pthread_mutex_destroy(&data->end_mutex);
+	pthread_mutex_destroy(&data->print_mutex);
+}
 
 static void	free_fork(t_data *data)
 {
@@ -29,5 +48,8 @@ void	exit_prog(t_data *data, t_philo *philos)
 {
 	if (data->fork)
 		free_fork(data);
-	free(philos);
+	if (data)
+		free_data(data);
+	if (philos)
+		free_philos(philos, data);
 }

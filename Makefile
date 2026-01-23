@@ -6,7 +6,7 @@
 #    By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/07 09:56:21 by rcompain          #+#    #+#              #
-#    Updated: 2026/01/22 11:41:30 by rcompain         ###   ########.fr        #
+#    Updated: 2026/01/23 14:47:17 by rcompain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 #                                   SETTINGS                                   #
 # **************************************************************************** #
 
-NAME		= philosophers
+NAME		= philo
 CC			= cc
 CFLAGS		= -Wall -Wextra -Werror
 RM			= rm -f
@@ -36,7 +36,8 @@ SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/utils.c \
 			  $(SRC_DIR)/init.c \
 			  $(SRC_DIR)/exit.c \
-			  $(SRC_DIR)/routine.c
+			  $(SRC_DIR)/routine.c \
+			  $(SRC_DIR)/monitoring.c
 
 OBJ			= ${SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o}
 

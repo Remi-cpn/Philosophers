@@ -6,11 +6,18 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:22:45 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/22 11:41:34 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:09:24 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+#include <pthread.h>
+
+void	init_monitor(t_data *data, t_philo *philos, t_monitor *monitor)
+{
+	monitor->data = data;
+	monitor->philos = philos;
+}
 
 t_philo	*init_philos(t_data *data)
 {
@@ -18,19 +25,15 @@ t_philo	*init_philos(t_data *data)
 	int			i;
 
 	philos = ft_calloc(data->nbr_ph, sizeof(t_philo));
+	if (!philos)
+		exit_prog(data, NULL);
 	i = 0;
 	while (i < data->nbr_ph)
 	{
-		philos[i].id = '1' + i;
+		philos[i].id = i;
 		philos[i].data = data;
-		philos[i].dead = false;
-		pthread_create(&philos[i].thread, NULL, routine, &philos[i]);
-		i++;
-	}
-	i = 0;
-	while (i < data->nbr_ph)
-	{
-		pthread_join(philos[i].thread, NULL);
+		philos[i].last_meal = get_time_ms();
+		pthread_mutex_init(&philos[i].meal_mutex, NULL);
 		i++;
 	}
 	return (philos);
@@ -41,6 +44,8 @@ static void	init_fork(t_data *data)
 	int	i;
 
 	data->fork = malloc(sizeof(pthread_mutex_t) * data->nbr_ph);
+	if (!data->fork)
+		exit_prog(data, NULL);
 	i = 0;
 	while (i < data->nbr_ph)
 	{
@@ -58,6 +63,8 @@ void	init_data(t_data *data, char **av)
 	if (av[5])
 		data->nbr_meal = ft_atoi_wich(av[5]);
 	data->end = false;
+	data->start_time = get_time_ms();
 	pthread_mutex_init(&data->end_mutex, NULL);
+	pthread_mutex_init(&data->print_mutex, NULL);
 	init_fork(data);
 }

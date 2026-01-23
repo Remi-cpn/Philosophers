@@ -6,13 +6,31 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:20:46 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/21 19:08:34 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/01/23 15:08:09 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 #include <string.h>
+#include <sys/time.h>
+#include <unistd.h>
 
+void	waitting(long time)
+{
+	long	current;
+
+	current = get_time_ms();
+	while ((get_time_ms() - current) < time)
+		usleep(500);
+}
+
+long	get_time_ms(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
 
 int	ft_atoi_wich(char *s)
 {
