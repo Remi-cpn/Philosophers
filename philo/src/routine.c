@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/23 15:30:42 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/05 14:48:27 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,20 @@
 #include <string.h>
 #include <unistd.h>
 
-void	print(t_data *data, t_philo *philo, char *action, int flag_death)
+void	print(t_data *d, t_philo *philo, char *action, int flag_stop)
 {
 	long	current_time;
 
-	if (end(data) == true && flag_death == 0)
-		return ;
-	pthread_mutex_lock(&data->print_mutex);
-	current_time = get_time_ms() - data->start_time;
-	printf("[%ld] %d => %s\n", current_time, philo->id + 1, action);
-	pthread_mutex_unlock(&data->print_mutex);
+	pthread_mutex_lock(&d->print_mutex);
+	if (!(end(d) == true && flag_stop == 0))
+	{
+		current_time = get_time_ms() - d->start_time;
+		if (flag_stop == 2)
+			printf("[%ld] => %s %d times\n", current_time, action, d->nbr_meal);
+		else
+			printf("[%ld] %d => %s\n", current_time, philo->id + 1, action);
+	}
+	pthread_mutex_unlock(&d->print_mutex);
 }
 
 bool	end(t_data *data)
@@ -65,6 +69,7 @@ static void	eating(t_philo *philo, t_data *data)
 	time = 0;
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal = get_time_ms();
+	philo->nbr_meal++;
 	pthread_mutex_unlock(&philo->meal_mutex);
 	print(data, philo, "Eat", 0);
 	waitting(data->eat_time);

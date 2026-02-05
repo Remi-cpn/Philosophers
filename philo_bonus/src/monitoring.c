@@ -6,11 +6,39 @@
 /*   By: rcompain <rcompain@42angouleme.fr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 11:43:12 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/23 14:52:53 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/05 12:51:46 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+
+static void	check_nbr_meal(t_data *data, t_monitor *m)
+{
+	int	i;
+
+	if (data->count_meal == false)
+		return ;
+	i = 0;
+	while (i < data->nbr_ph)
+	{
+		if (m->nbr_meal[i] == false)
+			return ;
+		i++;
+	}
+	pthread_mutex_lock(&m->data->end_mutex);
+	m->data->end = true;
+	pthread_mutex_unlock(&m->data->end_mutex);
+	print(m->data, NULL, "All the philosophers ate", 2);
+}
+
+static void	set_death(t_monitor *m, int i)
+{
+	pthread_mutex_lock(&m->data->end_mutex);
+	m->data->end = true;
+	pthread_mutex_unlock(&m->data->end_mutex);
+	pthread_mutex_unlock(&m->philos[i].meal_mutex);
+	print(m->data, &m->philos[i], "Dead", 1);
+}
 
 void	*monitoring(void *parms)
 {
@@ -25,17 +53,16 @@ void	*monitoring(void *parms)
 		if (get_time_ms() - m->philos[i].last_meal
 			>= m->data->death_time)
 		{
-			pthread_mutex_lock(&m->data->end_mutex);
-			m->data->end = true;
-			pthread_mutex_unlock(&m->data->end_mutex);
-			pthread_mutex_unlock(&m->philos[i].meal_mutex);
-			print(m->data, &m->philos[i], "Dead", 1);
+			set_death(m, i);
 			return (NULL);
 		}
+		if (m->data->count_meal && m->philos[i].nbr_meal == m->data->nbr_meal)
+			m->nbr_meal[i] = true;
 		pthread_mutex_unlock(&m->philos[i].meal_mutex);
 		i++;
 		if (i == m->data->nbr_ph)
 			i = 0;
+		check_nbr_meal(m->data, m);
 		usleep(500);
 	}
 	return (NULL);

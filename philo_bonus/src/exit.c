@@ -6,11 +6,12 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:36:47 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/23 14:35:02 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/05 13:28:04 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
+#include <pthread.h>
 
 static void	free_philos(t_philo *philos, t_data *data)
 {
@@ -44,12 +45,13 @@ static void	free_fork(t_data *data)
 	free(data->fork);
 }
 
-void	exit_prog(t_data *data, t_philo *philos)
+void	exit_prog(t_data *data, t_philo *philos, t_monitor *monitor)
 {
-	if (data->fork)
-		free_fork(data);
-	if (data)
-		free_data(data);
+	if (monitor && monitor->nbr_meal)
+		free(monitor->nbr_meal);
 	if (philos)
 		free_philos(philos, data);
+	if (data && data->fork)
+		free_fork(data);
+	free_data(data);
 }

@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:20:46 by rcompain          #+#    #+#             */
-/*   Updated: 2026/01/23 15:08:09 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/05 13:47:47 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,19 @@ void	*ft_calloc(size_t nmemb, size_t size)
 		return (NULL);
 	memset(tmp, 0, nmemb * size);
 	return (tmp);
+}
+
+void	*ft_memset(void *s, int c, size_t n)
+{
+	size_t			i;
+	unsigned char	*str;
+
+	i = 0;
+	str = (unsigned char *)s;
+	while (i < n)
+	{
+		str[i] = (unsigned char)c;
+		i++;
+	}
+	return (s);
 }
