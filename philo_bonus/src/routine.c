@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 14:48:27 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/17 12:44:54 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,22 +77,23 @@ static void	eating(t_philo *philo, t_data *data)
 	pthread_mutex_unlock(&data->fork[(philo->id + 1) % data->nbr_ph]);
 }
 
-void	*routine(void *params)
+void	routine(t_data *data)
 {
-	t_philo	*philo;
+	t_philo	philo;
 
-	philo = params;
-	if (philo->id % 2 == 0)
+	ft_memset(&philo, 0, sizeof(t_philo));
+	philo = init_philos(data);
+	if (philo.id % 2 == 0)
 		usleep(500);
-	while (end(philo->data) == false)
+	while (end(data) == false)
 	{
-		if (philo->data->nbr_ph > 1)
+		if (data->nbr_ph > 1)
 		{
-			eating(philo, philo->data);
-			sleeping(philo->data, philo);
-			print(philo->data, philo, "Think", 0);
+			eating(&philo, data);
+			sleeping(data, &philo);
+			print(data, &philo, "Think", 0);
 		}
 		usleep(10);
 	}
-	return (NULL);
+	exit(0);
 }

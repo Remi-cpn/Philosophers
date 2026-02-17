@@ -6,13 +6,14 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:22:45 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 15:03:50 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/17 12:42:54 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 #include <pthread.h>
 #include <limits.h>
+#include <semaphore.h>
 
 static void	data_control_value(t_data *data, int *flag)
 {
@@ -31,62 +32,22 @@ static void	data_control_value(t_data *data, int *flag)
 	}
 }
 
-void	init_monitor(t_data *data, t_philo *philos, t_monitor *m, int *flag)
+t_philo	init_philos(t_data *data)
 {
-	if (*flag == ERROR)
-		return ;
-	m->data = data;
-	m->philos = philos;
-	m->nbr_meal = NULL;
-	if (data->count_meal == true)
-	{
-		m->nbr_meal = ft_calloc(data->nbr_ph, sizeof(bool));
-		if (!m->nbr_meal)
-			*flag = ERROR;
-	}
-}
-
-t_philo	*init_philos(t_data *data, int *flag)
-{
-	t_philo		*philos;
+	t_philo		philo;
 	int			i;
 
-	if (*flag == ERROR)
-		return (NULL);
-	philos = ft_calloc(data->nbr_ph, sizeof(t_philo));
-	if (!philos)
-		*flag = ERROR;
 	i = 0;
-	while (*flag == SUCCES && i < data->nbr_ph)
+	while (i < data->nbr_ph)
 	{
-		philos[i].id = i;
-		philos[i].data = data;
-		philos[i].last_meal = get_time_ms();
-		pthread_mutex_init(&philos[i].meal_mutex, NULL);
+		philo.last_meal = get_time_ms();
 		i++;
 	}
-	return (philos);
-}
-
-static void	init_fork(t_data *data, int *flag)
-{
-	int	i;
-
-	data->fork = ft_calloc(data->nbr_ph, sizeof(pthread_mutex_t));
-	if (!data->fork)
-		*flag = ERROR;
-	i = 0;
-	while (*flag == SUCCES && i < data->nbr_ph)
-	{
-		pthread_mutex_init(&data->fork[i], NULL);
-		i++;
-	}
+	return (philo);
 }
 
 void	init_data(t_data *data, char **av, int *flag)
 {
-	pthread_mutex_init(&data->end_mutex, NULL);
-	pthread_mutex_init(&data->print_mutex, NULL);
 	data->nbr_ph = ft_atoi_wich(av[1]);
 	data->death_time = ft_atoi_wich(av[2]);
 	data->eat_time = ft_atoi_wich(av[3]);
@@ -100,5 +61,10 @@ void	init_data(t_data *data, char **av, int *flag)
 	data->end = false;
 	data->start_time = get_time_ms();
 	data_control_value(data, flag);
-	init_fork(data, flag);
+	*flag = sem_init(&data->forks, 0, data->nbr_ph);
+	if (*flag == FAILURE)
+		return ;
+	sem_init(&data->death, 0, 1);
+	if (*flag == FAILURE)
+		return ;
 }
