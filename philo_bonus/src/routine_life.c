@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 10:52:15 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 13:54:55 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:56:48 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	sleeping(t_data *data, t_philo *philo)
 
 void	eating(t_philo *p, t_data *d)
 {
+	sem_wait(d->s_table);
 	sem_wait(d->s_forks);
 	print(d, p, "has taken a fork", 0);
 	sem_wait(d->s_forks);
@@ -36,4 +37,5 @@ void	eating(t_philo *p, t_data *d)
 	print(d, p, "has drop a fork", 0);
 	sem_post(d->s_forks);
 	print(d, p, "has drop a fork", 0);
+	sem_post(d->s_table);
 }

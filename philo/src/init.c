@@ -6,13 +6,11 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:22:45 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 15:03:50 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:59:33 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <pthread.h>
-#include <limits.h>
 
 static void	data_control_value(t_data *data, int *flag)
 {

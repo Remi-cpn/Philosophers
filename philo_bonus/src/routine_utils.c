@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 10:59:56 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 13:44:26 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:27:27 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,10 @@ void	print(t_data *d, t_philo *p, char *action, int flag_stop)
 	long	current_time;
 
 	sem_wait(d->s_print);
-	if (!(end(p) == true) || flag_stop == 2)
+	if (!(end(p) == true))
 	{
 		current_time = get_time_ms() - d->start_time;
-		if (flag_stop == 2)
-			printf("[%ld] => %s %d times\n", current_time, action, d->nbr_meal);
-		else
-			printf("[%ld] %d => %s\n", current_time, p->id + 1, action);
+		printf("[%ld] %d %s\n", current_time, p->id + 1, action);
 		if (flag_stop == 1)
 		{
 			sem_post(d->s_end);

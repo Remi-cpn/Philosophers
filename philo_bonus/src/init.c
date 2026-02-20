@@ -6,15 +6,11 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:22:45 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/18 16:23:42 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:55:39 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <pthread.h>
-#include <limits.h>
-#include <semaphore.h>
-#include <fcntl.h>
 
 int	init_semaphores(t_data *d)
 {
@@ -38,6 +34,10 @@ int	init_semaphores(t_data *d)
 	if (d->s_ph_dead == SEM_FAILED)
 		return (ERROR);
 	sem_unlink("/ph_dead");
+	d->s_table = sem_open("/table", O_CREAT, 0644, d->nbr_ph / 2);
+	if (d->s_table == SEM_FAILED)
+		return (ERROR);
+	sem_unlink("/table");
 	return (SUCCES);
 }
 

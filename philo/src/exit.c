@@ -6,12 +6,11 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:36:47 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 13:28:04 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:58:50 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <pthread.h>
 
 static void	free_philos(t_philo *philos, t_data *data)
 {

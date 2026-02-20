@@ -6,13 +6,11 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:39:49 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 09:41:06 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:57:01 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <pthread.h>
-#include <semaphore.h>
 
 static void	close_sem(t_data *d)
 {
@@ -21,6 +19,7 @@ static void	close_sem(t_data *d)
 	sem_close(d->s_print);
 	sem_close(d->s_ph_dead);
 	sem_close(d->s_meal_end);
+	sem_close(d->s_table);
 }
 
 static void	wait_philo(t_data *d)

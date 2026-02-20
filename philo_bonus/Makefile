@@ -6,7 +6,7 @@
 #    By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/11/07 09:56:21 by rcompain          #+#    #+#              #
-#    Updated: 2026/02/18 14:52:22 by rcompain         ###   ########.fr        #
+#    Updated: 2026/02/20 16:53:06 by rcompain         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,6 +34,7 @@ INC_DIR		= include
 
 SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/utils.c \
+			  $(SRC_DIR)/utils_get_time.c \
 			  $(SRC_DIR)/init.c \
 			  $(SRC_DIR)/routine.c \
 			  $(SRC_DIR)/routine_life.c \

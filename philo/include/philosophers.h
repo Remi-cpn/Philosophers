@@ -6,18 +6,19 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:40:21 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 13:47:57 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:59:27 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# include "stdlib.h"
-# include "unistd.h"
-# include "stdio.h"
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdio.h>
 # include <pthread.h>
 # include <stdbool.h>
+# include <limits.h>
 
 typedef enum e_error
 {

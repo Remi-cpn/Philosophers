@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/23 11:43:12 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 13:53:08 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:39:38 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static void	check_nbr_meal(t_data *data, t_monitor *m)
 	pthread_mutex_lock(&m->data->end_mutex);
 	m->data->end = true;
 	pthread_mutex_unlock(&m->data->end_mutex);
-	print(m->data, NULL, "all the philosophers ate", 2);
 }
 
 static void	set_death(t_monitor *m, int i)

@@ -6,14 +6,11 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 13:52:46 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:59:59 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <pthread.h>
-#include <string.h>
-#include <unistd.h>
 
 void	print(t_data *d, t_philo *philo, char *action, int flag_stop)
 {
@@ -23,10 +20,7 @@ void	print(t_data *d, t_philo *philo, char *action, int flag_stop)
 	if (!(end(d) == true && flag_stop == 0))
 	{
 		current_time = get_time_ms() - d->start_time;
-		if (flag_stop == 2)
-			printf("[%ld] => %s %d times\n", current_time, action, d->nbr_meal);
-		else
-			printf("[%ld] %d => %s\n", current_time, philo->id + 1, action);
+		printf("[%ld] %d %s\n", current_time, philo->id + 1, action);
 	}
 	pthread_mutex_unlock(&d->print_mutex);
 }
@@ -84,6 +78,11 @@ void	*routine(void *params)
 	philo = params;
 	if (philo->id % 2 == 0)
 		usleep(500);
+	if (philo->data->nbr_ph < 2)
+	{
+		print(philo->data, philo, "has taken a fork", 0);
+		waitting(philo->data->eat_time * 2);
+	}
 	while (end(philo->data) == false)
 	{
 		if (philo->data->nbr_ph > 1)

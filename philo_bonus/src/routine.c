@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 14:13:59 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:55:46 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,9 @@ void	routine(t_data *d, t_philo *p)
 
 	flag = init_routine(p);
 	if (flag != ERROR && p->id % 2 == 0)
-		usleep(500);
+		usleep(50);
+	if (d->nbr_ph < 2)
+		print(d, p, "has taken a fork", 0);
 	while (flag != ERROR && end(p) == false)
 	{
 		if (d->nbr_ph > 1)

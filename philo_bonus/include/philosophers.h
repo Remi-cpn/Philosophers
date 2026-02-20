@@ -6,15 +6,16 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:40:21 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 13:37:31 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:55:34 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
-# include "stdlib.h"
+# include <stdlib.h>
 # include <unistd.h>
+# include <limits.h>
 # include <stdio.h>
 # include <pthread.h>
 # include <stdbool.h>
@@ -40,9 +41,9 @@ typedef struct s_data
 	int			nbr_meal;
 	sem_t		*s_forks;
 	sem_t		*s_end;
+	sem_t		*s_table;
 	sem_t		*s_print;
 	sem_t		*s_ph_dead;
-	bool		ph_dead;
 	pid_t		*pids;
 	bool		end;
 	int			nbr_ph;

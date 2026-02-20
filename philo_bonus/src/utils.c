@@ -6,14 +6,11 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:20:46 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/19 18:22:15 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:56:19 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <string.h>
-#include <sys/time.h>
-#include <unistd.h>
 
 char	*ft_strjoin_wich(char *s1, char *s2, size_t size_s1)
 {
@@ -69,14 +66,6 @@ char	*ft_itoa_wich(int n)
 	return (s);
 }
 
-long	get_time_ms(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-
 int	ft_atoi_wich(char *s)
 {
 	int	i;
@@ -110,7 +99,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	tmp = malloc(size * nmemb);
 	if (!tmp)
 		return (NULL);
-	memset(tmp, 0, nmemb * size);
+	ft_memset(tmp, 0, nmemb * size);
 	return (tmp);
 }
 

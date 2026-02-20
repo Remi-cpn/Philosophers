@@ -6,14 +6,12 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:20:46 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 13:47:47 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 17:00:44 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <string.h>
 #include <sys/time.h>
-#include <unistd.h>
 
 void	waitting(long time)
 {
@@ -65,7 +63,7 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	tmp = malloc(size * nmemb);
 	if (!tmp)
 		return (NULL);
-	memset(tmp, 0, nmemb * size);
+	ft_memset(tmp, 0, nmemb * size);
 	return (tmp);
 }
 
