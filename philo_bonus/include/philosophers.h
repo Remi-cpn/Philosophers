@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:40:21 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/19 20:38:26 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 13:37:31 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_data
 	sem_t		*s_end;
 	sem_t		*s_print;
 	sem_t		*s_ph_dead;
+	bool		ph_dead;
 	pid_t		*pids;
 	bool		end;
 	int			nbr_ph;

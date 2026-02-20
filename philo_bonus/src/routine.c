@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 11:02:05 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 14:13:59 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	routine(t_data *d, t_philo *p)
 		{
 			eating(p, d);
 			sleeping(d, p);
-			print(d, p, "Think", 0);
+			print(d, p, "is thinking", 0);
 		}
 		usleep(10);
 	}

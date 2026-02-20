@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 14:48:27 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 13:52:46 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,36 +45,36 @@ bool	end(t_data *data)
 
 static void	sleeping(t_data *data, t_philo *philo)
 {
-	int	time;
-
-	time = 0;
-	print(data, philo, "Sleep", 0);
+	print(data, philo, "is sleeping", 0);
 	waitting(data->sleep_time);
 }
 
 static void	eating(t_philo *philo, t_data *data)
 {
-	int	time;
-
 	if (philo->id % 2 == 0)
 	{
 		pthread_mutex_lock(&data->fork[philo->id]);
+		print(data, philo, "has taken a fork", 0);
 		pthread_mutex_lock(&data->fork[(philo->id + 1) % data->nbr_ph]);
+		print(data, philo, "has taken a fork", 0);
 	}
 	else
 	{
 		pthread_mutex_lock(&data->fork[(philo->id + 1) % data->nbr_ph]);
+		print(data, philo, "has taken a fork", 0);
 		pthread_mutex_lock(&data->fork[philo->id]);
+		print(data, philo, "has taken a fork", 0);
 	}
-	time = 0;
 	pthread_mutex_lock(&philo->meal_mutex);
 	philo->last_meal = get_time_ms();
 	philo->nbr_meal++;
 	pthread_mutex_unlock(&philo->meal_mutex);
-	print(data, philo, "Eat", 0);
+	print(data, philo, "is eating", 0);
 	waitting(data->eat_time);
 	pthread_mutex_unlock(&data->fork[philo->id]);
+	print(data, philo, "has drop a fork", 0);
 	pthread_mutex_unlock(&data->fork[(philo->id + 1) % data->nbr_ph]);
+	print(data, philo, "has drop a fork", 0);
 }
 
 void	*routine(void *params)
@@ -90,7 +90,7 @@ void	*routine(void *params)
 		{
 			eating(philo, philo->data);
 			sleeping(philo->data, philo);
-			print(philo->data, philo, "Think", 0);
+			print(philo->data, philo, "is thinking", 0);
 		}
 		usleep(10);
 	}

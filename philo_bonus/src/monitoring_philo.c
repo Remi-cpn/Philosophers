@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/18 10:17:54 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 09:24:01 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 13:55:05 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	*monitoring_philo(void *params)
 		if (get_time_ms() - p->last_meal
 			>= p->data->death_time)
 		{
-			print(p->data, p, "Died", 1);
+			if (!(end(p)))
+				print(p->data, p, "died", 1);
 			sem_wait(p->s_check_end);
 			p->end = true;
 			sem_post(p->s_check_end);
