@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 18:20:46 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 13:47:47 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/19 18:22:15 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,58 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-void	waitting(long time)
+char	*ft_strjoin_wich(char *s1, char *s2, size_t size_s1)
 {
-	long	current;
+	size_t	size_s2;
+	char	*dest;
+	int		i;
+	int		j;
 
-	current = get_time_ms();
-	while ((get_time_ms() - current) < time)
-		usleep(500);
+	size_s2 = 0;
+	while (s2[size_s2])
+		size_s2++;
+	dest = ft_calloc(size_s1 + size_s2 + 1, sizeof(char));
+	if (dest)
+	{
+		i = -1;
+		while (++i < (int)size_s1)
+			dest[i] = s1[i];
+		j = -1;
+		while (++j < (int)size_s2)
+		{
+			dest[i] = s2[j];
+			i++;
+		}
+	}
+	free(s2);
+	return (dest);
+}
+
+char	*ft_itoa_wich(int n)
+{
+	int		len;
+	int		nbr;
+	char	*s;
+
+	nbr = n;
+	len = 1;
+	while (n != 0)
+	{
+		n = n / 10;
+		len++;
+	}
+	s = ft_calloc(len + 1, sizeof(char));
+	if (!s)
+		return (NULL);
+	if (nbr == 0)
+		s[0] = '0';
+	while (nbr > 0)
+	{
+		len--;
+		s[len] = (nbr % 10) + '0';
+		nbr = nbr / 10;
+	}
+	return (s);
 }
 
 long	get_time_ms(void)

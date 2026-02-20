@@ -6,94 +6,76 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/17 12:44:54 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/20 11:02:05 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
-#include <pthread.h>
-#include <string.h>
-#include <unistd.h>
 
-void	print(t_data *d, t_philo *philo, char *action, int flag_stop)
+static void	end_routine(t_philo *p)
 {
-	long	current_time;
-
-	pthread_mutex_lock(&d->print_mutex);
-	if (!(end(d) == true && flag_stop == 0))
-	{
-		current_time = get_time_ms() - d->start_time;
-		if (flag_stop == 2)
-			printf("[%ld] => %s %d times\n", current_time, action, d->nbr_meal);
-		else
-			printf("[%ld] %d => %s\n", current_time, philo->id + 1, action);
-	}
-	pthread_mutex_unlock(&d->print_mutex);
+	if (p->m_check_end)
+		pthread_join(p->m_check_end, NULL);
+	if (p->m_philo)
+		pthread_join(p->m_philo, NULL);
+	if (p->s_check_last_meal)
+		sem_close(p->s_check_last_meal);
+	if (p->s_check_end)
+		sem_close(p->s_check_end);
 }
 
-bool	end(t_data *data)
+static sem_t	*init_sem(t_philo *p, char *name, size_t size_name)
 {
-	bool	end;
+	char	*id;
+	char	*s;
+	sem_t	*sem;
 
-	pthread_mutex_lock(&data->end_mutex);
-	end = data->end;
-	pthread_mutex_unlock(&data->end_mutex);
-	if (end == true)
-		return (true);
-	return (false);
+	id = ft_itoa_wich(p->id);
+	if (!id)
+		return (NULL);
+	s = ft_strjoin_wich(name, id, size_name);
+	if (!s)
+		return (NULL);
+	sem = sem_open(s, O_CREAT, 0644, 1);
+	if (sem == SEM_FAILED)
+		sem = NULL;
+	sem_unlink(s);
+	free(s);
+	return (sem);
 }
 
-static void	sleeping(t_data *data, t_philo *philo)
+static int	init_routine(t_philo *p)
 {
-	int	time;
-
-	time = 0;
-	print(data, philo, "Sleep", 0);
-	waitting(data->sleep_time);
+	p->s_check_last_meal = init_sem(p, "/last_meal_", 11);
+	if (!p->s_check_last_meal)
+		return (ERROR);
+	p->s_check_end = init_sem(p, "/end_", 5);
+	if (!p->s_check_end)
+		return (ERROR);
+	pthread_create(&(p->m_philo), NULL, monitoring_philo, p);
+	pthread_create(&(p->m_check_end), NULL, monitoring_check_end, p);
+	return (SUCCES);
 }
 
-static void	eating(t_philo *philo, t_data *data)
+void	routine(t_data *d, t_philo *p)
 {
-	int	time;
+	int	flag;
 
-	if (philo->id % 2 == 0)
-	{
-		pthread_mutex_lock(&data->fork[philo->id]);
-		pthread_mutex_lock(&data->fork[(philo->id + 1) % data->nbr_ph]);
-	}
-	else
-	{
-		pthread_mutex_lock(&data->fork[(philo->id + 1) % data->nbr_ph]);
-		pthread_mutex_lock(&data->fork[philo->id]);
-	}
-	time = 0;
-	pthread_mutex_lock(&philo->meal_mutex);
-	philo->last_meal = get_time_ms();
-	philo->nbr_meal++;
-	pthread_mutex_unlock(&philo->meal_mutex);
-	print(data, philo, "Eat", 0);
-	waitting(data->eat_time);
-	pthread_mutex_unlock(&data->fork[philo->id]);
-	pthread_mutex_unlock(&data->fork[(philo->id + 1) % data->nbr_ph]);
-}
-
-void	routine(t_data *data)
-{
-	t_philo	philo;
-
-	ft_memset(&philo, 0, sizeof(t_philo));
-	philo = init_philos(data);
-	if (philo.id % 2 == 0)
+	flag = init_routine(p);
+	if (flag != ERROR && p->id % 2 == 0)
 		usleep(500);
-	while (end(data) == false)
+	while (flag != ERROR && end(p) == false)
 	{
-		if (data->nbr_ph > 1)
+		if (d->nbr_ph > 1)
 		{
-			eating(&philo, data);
-			sleeping(data, &philo);
-			print(data, &philo, "Think", 0);
+			eating(p, d);
+			sleeping(d, p);
+			print(d, p, "Think", 0);
 		}
 		usleep(10);
 	}
-	exit(0);
+	sem_post(d->s_end);
+	end_routine(p);
+	free(d->pids);
+	exit(flag);
 }

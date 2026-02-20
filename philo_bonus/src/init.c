@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 10:22:45 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/17 12:42:54 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/18 16:23:42 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,42 @@
 #include <pthread.h>
 #include <limits.h>
 #include <semaphore.h>
+#include <fcntl.h>
+
+int	init_semaphores(t_data *d)
+{
+	d->s_end = sem_open("/end", O_CREAT, 0644, 0);
+	if (d->s_end == SEM_FAILED)
+		return (ERROR);
+	sem_unlink("/end");
+	d->s_meal_end = sem_open("/meal_end", O_CREAT, 0644, 0);
+	if (d->s_meal_end == SEM_FAILED)
+		return (ERROR);
+	sem_unlink("/meal_end");
+	d->s_print = sem_open("/print", O_CREAT, 0644, 1);
+	if (d->s_print == SEM_FAILED)
+		return (ERROR);
+	sem_unlink("/print");
+	d->s_forks = sem_open("/forks", O_CREAT, 0644, d->nbr_ph);
+	if (d->s_forks == SEM_FAILED)
+		return (ERROR);
+	sem_unlink("/forks");
+	d->s_ph_dead = sem_open("/ph_dead", O_CREAT, 0644, 0);
+	if (d->s_ph_dead == SEM_FAILED)
+		return (ERROR);
+	sem_unlink("/ph_dead");
+	return (SUCCES);
+}
+
+t_philo	init_philos(t_data *data)
+{
+	t_philo		philo;
+
+	ft_memset(&philo, 0, sizeof(t_philo));
+	philo.last_meal = get_time_ms();
+	philo.data = data;
+	return (philo);
+}
 
 static void	data_control_value(t_data *data, int *flag)
 {
@@ -32,20 +68,6 @@ static void	data_control_value(t_data *data, int *flag)
 	}
 }
 
-t_philo	init_philos(t_data *data)
-{
-	t_philo		philo;
-	int			i;
-
-	i = 0;
-	while (i < data->nbr_ph)
-	{
-		philo.last_meal = get_time_ms();
-		i++;
-	}
-	return (philo);
-}
-
 void	init_data(t_data *data, char **av, int *flag)
 {
 	data->nbr_ph = ft_atoi_wich(av[1]);
@@ -61,10 +83,7 @@ void	init_data(t_data *data, char **av, int *flag)
 	data->end = false;
 	data->start_time = get_time_ms();
 	data_control_value(data, flag);
-	*flag = sem_init(&data->forks, 0, data->nbr_ph);
-	if (*flag == FAILURE)
-		return ;
-	sem_init(&data->death, 0, 1);
-	if (*flag == FAILURE)
-		return ;
+	data->pids = ft_calloc(data->nbr_ph, sizeof(pid_t));
+	if (!data->pids)
+		*flag = ERROR;
 }

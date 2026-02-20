@@ -1,0 +1,43 @@
+{
+   sem_open_still_reachable_1
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:__sem_check_add_mapping
+   fun:sem_open@@GLIBC_2.34
+   fun:init_semaphores
+   fun:main
+}
+{
+   sem_open_still_reachable_2
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:__sem_check_add_mapping
+   fun:sem_open@@GLIBC_2.34
+   fun:init_semaphores
+   fun:main
+}
+{
+   sem_open_still_reachable_3
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:malloc
+   fun:tsearch
+   fun:__sem_check_add_mapping
+   fun:sem_open@@GLIBC_2.34
+   fun:init_semaphores
+   fun:main
+}
+{
+   sem_open_still_reachable_4
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:malloc
+   fun:tsearch
+   fun:__sem_check_add_mapping
+   fun:sem_open@@GLIBC_2.34
+   fun:init_semaphores
+   fun:main
+}
+
