@@ -6,7 +6,7 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/22 11:40:53 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/20 16:55:46 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/23 10:15:11 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,17 @@ static int	init_routine(t_philo *p)
 	p->s_check_end = init_sem(p, "/end_", 5);
 	if (!p->s_check_end)
 		return (ERROR);
-	pthread_create(&(p->m_philo), NULL, monitoring_philo, p);
-	pthread_create(&(p->m_check_end), NULL, monitoring_check_end, p);
+	if (pthread_create(&(p->m_philo), NULL, monitoring_philo, p) != 0)
+	{
+		sem_post(p->data->s_end);
+		return (ERROR);
+	}
+	if (pthread_create(&(p->m_check_end), NULL, monitoring_check_end, p) != 0)
+	{
+		sem_post(p->data->s_end);
+		pthread_join(p->m_philo, NULL);
+		return (ERROR);
+	}
 	return (SUCCES);
 }
 
