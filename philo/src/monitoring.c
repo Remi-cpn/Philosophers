@@ -50,7 +50,7 @@ void	*monitoring(void *parms)
 	{
 		pthread_mutex_lock(&m->philos[i].meal_mutex);
 		if (get_time_ms() - m->philos[i].last_meal
-			>= m->data->death_time)
+			> m->data->death_time)
 		{
 			set_death(m, i);
 			return (NULL);

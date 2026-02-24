@@ -6,30 +6,56 @@
 /*   By: rcompain <rcompain@student.42angouleme.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/21 14:39:49 by rcompain          #+#    #+#             */
-/*   Updated: 2026/02/05 14:38:10 by rcompain         ###   ########.fr       */
+/*   Updated: 2026/02/24 15:02:25 by rcompain         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philosophers.h"
 
+static void	join(t_data *data, t_philo *philos, int i)
+{
+	int	j;
+
+	if (i != data->nbr_ph)
+	{
+		pthread_mutex_lock(&(data->end_mutex));
+		data->end = true;
+		pthread_mutex_unlock(&(data->end_mutex));
+	}
+	j = 0;
+	while (j < i)
+	{
+		pthread_join(philos[j].thread, NULL);
+		j++;
+	}
+}
+
 static void	exec(t_data *data, t_philo *philos, t_monitor *monitor)
 {
-	int			i;
+	int		i;
+	int		flag;
 
 	i = 0;
-	while (i < data->nbr_ph)
+	flag = 0;
+	while (flag == 0 && i < data->nbr_ph)
 	{
-		pthread_create(&philos[i].thread, NULL, routine, &philos[i]);
-		i++;
+		if (pthread_create(&philos[i].thread, NULL, routine, &philos[i]) != 0)
+			flag = 1;
+		else
+			i++;
 	}
-	pthread_create(&monitor->thread, NULL, monitoring, monitor);
-	pthread_join(monitor->thread, NULL);
-	i = 0;
-	while (i < data->nbr_ph)
+	if (flag == 0)
 	{
-		pthread_join(philos[i].thread, NULL);
-		i++;
+		if (pthread_create(&monitor->thread, NULL, monitoring, monitor) != 0)
+		{
+			pthread_mutex_lock(&(data->end_mutex));
+			data->end = true;
+			pthread_mutex_unlock(&(data->end_mutex));
+		}
+		else
+			pthread_join(monitor->thread, NULL);
 	}
+	join(data, philos, i);
 }
 
 int	main(int ac, char **av)
