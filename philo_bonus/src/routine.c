@@ -61,6 +61,7 @@ static int	init_routine(t_philo *p)
 	{
 		sem_post(p->data->s_end);
 		pthread_join(p->m_philo, NULL);
+		p->m_philo = NULL;
 		return (ERROR);
 	}
 	return (SUCCES);
